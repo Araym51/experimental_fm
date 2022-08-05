@@ -2,32 +2,38 @@ from wsgiref.util import setup_testing_defaults
 
 
 class PageNotFoundView:
-    def __call__(self):
+    def __call__(self, request):
         return '404 WHAT', [b'404 PAGE Not Found']
 
 
 class Application:
     """основной класс для работы фреймворка"""
-    def __init__(self, routes):
+    def __init__(self, routes_lst, front_list):
         """
-        :param routes: переменная хранит все адреса сайта
+        :param routes_lst: переменная хранит все адреса сайта
         """
-        self.routes = routes
+        self.routes_lst = routes_lst
+        self.front_list = front_list
 
     def __call__(self, environ, start_response):
         # для запуска сервера применяем значения uwsgi по умолчанию
         setup_testing_defaults(environ)
         # получаем путь от пользователя
         path = environ['PATH_INFO']
-        if path in self.routes:
-            view = self.routes[path]
+        #проверяем, заканчивается ли на / адрес
+        if not path.endswith('/'):
+            path += '/'
+
+        # ищем нужный контроллер
+        if path in self.routes_lst:
+            view = self.routes_lst[path] # получаем view, потом передаем аргументы.
         else:
             view = PageNotFoundView
+        request = {}
+        for front in self.front_list:
+            front(request)
 
         # получаем код ответа из созданного view
-        code, body = view()
-        start_response(code, body)
-        return body
-
-
-
+        code, body = view(request)
+        start_response(code, [('Content-Type', 'text/html')])
+        return [body.encode('utf-8')]
