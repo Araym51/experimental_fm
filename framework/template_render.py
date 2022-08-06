@@ -11,7 +11,7 @@ def render(template_name, folder='templates',  **kwargs):
     """
     template_path = os.path.join(folder, template_name)
     # открываем шаблон по имени
-    with open(template_path, **kwargs) as page:
+    with open(template_path, encoding='utf-8') as page:
         # читаем содержимое
         template = Template(page.read())
     # рендерим шаблон с нужными параметрами

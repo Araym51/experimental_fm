@@ -9,3 +9,5 @@ sudo apt --fix-broken install
 pip install gunicorn
 pip install uwsgi
 pip install jinja2
+
+Запускать приложение через launch_app.py
