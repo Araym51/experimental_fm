@@ -5,19 +5,19 @@ from framework.template_render import render
 # views
 class IndexView:
     def __call__(self, request):
-        return '200 OK', [b'Index']
+        return '200 OK', 'Index'
         #todo заменить на render('index.html', data=request.get('data', None))
 
 
 class AboutView:
     def __call__(self, request):
-        return '200 OK', [b'About us']
+        return '200 OK', 'About us'
 
 
 # пути в приложении:
 routes = {
     '/': IndexView,
-    'about': AboutView,
+    '/about/': AboutView,
 }
 
 
