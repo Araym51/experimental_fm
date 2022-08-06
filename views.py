@@ -9,7 +9,7 @@ class IndexView:
 
 class AboutView:
     def __call__(self, request):
-        return '200 OK', 'About us'
+        return '200 OK', render('about.html')
 
 
 # пути в приложении:
