@@ -4,4 +4,4 @@ from views import routes
 from middleware import fronts
 
 application = Application(routes, fronts)
-run_wsgi(application, 8000)
+run_wsgi('127.0.0.1', 8000, application)
