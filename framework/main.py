@@ -1,6 +1,6 @@
 import quopri
 from wsgiref.util import setup_testing_defaults
-from requests_separator import PostRequest, GetRequest
+from .requests_separator import PostRequest, GetRequest
 
 
 class PageNotFoundView:

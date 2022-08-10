@@ -27,6 +27,7 @@ class GetRequest(RequestParse):
 
 
 class PostRequest(RequestParse):
+
     @staticmethod
     def get_wsgi_input_data(env) -> bytes:
         # пролучаем длинну тела
@@ -38,18 +39,18 @@ class PostRequest(RequestParse):
         print(data)
         return data
 
-    def parse_wsgi_input_data(data: bytes) -> dict:
+    def parse_wsgi_input_data(self, data: bytes) -> dict:
         result = {}
         if data:
             # декодируем данные
             data_str = data.decode(encoding='utf-8')
-            print(data_str)
-            result = PostRequest.parse_input_data(data_str)
-        return result
+            result = self.parse_input_data(data_str)
+            print(result)
+            return result
 
     def request_params(self, environ):
         # получаем данные из environ
         data = self.get_wsgi_input_data(environ)
         # превращаем данные в словарь
-        data = self.parse_input_data(data)
+        data = self.parse_wsgi_input_data(data)
         return data
