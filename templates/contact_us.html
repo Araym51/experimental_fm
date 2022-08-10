@@ -98,7 +98,7 @@
             border-top-right-radius: 5px;
         }
     </style>
-    <title>О нас</title>
+    <title>Contact Us</title>
 </head>
 <body style="height: 100%; display: flex; flex-direction: column;)">
     <ul>
@@ -107,15 +107,25 @@
         <li><a href='/contact_us/'>Contact Us</a></li>
     </ul>
     <div style="flex: 1 1 auto">
-        <h1>О нас</h1>
-        <p>Данный раздел в разработке</p>
-        <p>Адрес для связи: araimo@yandex.ru</p>
-        <p>Telegram: @Araym51</p>
+        <form action="" method="post">
+            <h1>Мы вам обязательно ответим.</h1>
+            <fieldset>
+                <legend>Оставьте нам сообщение</legend>
+                <p><label class="title" for="name">Тема:</label>
+                    <input type="text" name="name" id="name"><br />
+                    <label class="title" for="email">Ваш email:</label>
+                    <input type="text" name="email" id="email">
+                </p>
+                <p>
+                    <textarea name="message" cols="100" rows="10" >Текст сообщения: </textarea>
+                </p>
+            </fieldset>
+            <div class="submit"><input type="submit" value="отправить" /></div>
+        </form>
     </div>
 </body>
 <footer
     style="display: flex; justify-content: left; padding: 10px; height: 60px; background-color: #212529; color: #fff;">
     <p>Школа программирования<br>araimo@yandex.ru</p>
-    <p></p>
 </footer>
 </html>
