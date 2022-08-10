@@ -27,4 +27,29 @@ class GetRequest(RequestParse):
 
 
 class PostRequest(RequestParse):
-    pass
+    @staticmethod
+    def get_wsgi_input_data(env) -> bytes:
+        # пролучаем длинну тела
+        content_lenght_data = env.get('CONTENT_LENGTH')
+        # приводим длинну тела к int
+        content_lenght = int(content_lenght_data) if content_lenght_data else 0
+        # считываем данные если есть. Если нет возвращаем пустую байтовую строку
+        data = env['wsgi.input'].read(content_lenght) if content_lenght > 0 else b''
+        print(data)
+        return data
+
+    def parse_wsgi_input_data(data: bytes) -> dict:
+        result = {}
+        if data:
+            # декодируем данные
+            data_str = data.decode(encoding='utf-8')
+            print(data_str)
+            result = PostRequest.parse_input_data(data_str)
+        return result
+
+    def request_params(self, environ):
+        # получаем данные из environ
+        data = self.get_wsgi_input_data(environ)
+        # превращаем данные в словарь
+        data = self.parse_input_data(data)
+        return data
