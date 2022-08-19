@@ -85,7 +85,7 @@ class CourseFactory:
 
 
 # основной интерфейс проекта
-class Egine:
+class Engine:
     def __init__(self):
         self.teachers = []
         self.students = []
