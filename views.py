@@ -89,7 +89,7 @@ class CreateCategory:
 # контроллер списка категорий
 class CategoryList:
     def __call__(self, request):
-        return '200 OK', render_template('category_list.html', objects_list = site.categories) # todo category_list.html
+        return '200 OK', render_template('category_list.html', objects_list = site.categories)
 
 
 class CopyCourse:
