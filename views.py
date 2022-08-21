@@ -32,7 +32,8 @@ class CoursesListView:
         logger.log('Course list')
         try:
             category = site.find_category_id(int(request['request_params']['id']))
-            return '200 OK', render_template('course_list.html', objects_list = category.courses, name = category.name, id = category.id) # todo course_list.html
+            return '200 OK', render_template('course_list.html',
+                                             objects_list = category.courses, name = category.name, id = category.id)
         except KeyError:
             return '200 OK', 'Sorry, these course are no longer exists...'
 
@@ -51,7 +52,8 @@ class CreateCourse:
 
                 course = site.create_course('record', name, category)
                 site.courses.append(course)
-            return '200 OK', render_template('course_list.html', objects_list=category.courses, name=category.name, id=category.id)
+            return '200 OK', render_template('course_list.html', objects_list=category.courses,
+                                             name=category.name, id=category.id)
         else:
             try:
                 self.category_id = int(request['request_params']['id'])
