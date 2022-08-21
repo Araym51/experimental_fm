@@ -24,7 +24,7 @@ class ContactView:
 
 class StudyProgramsView:
     def __call__(self, request):
-        return '200 OK', render_template('study_programs.html', data = date.today()) # todo study_programs.html
+        return '200 OK', render_template('study_programs.html', data = date.today()) #
 
 
 class CoursesListView:
@@ -58,7 +58,7 @@ class CreateCourse:
             try:
                 self.category_id = int(request['request_params']['id'])
                 category = site.find_category_id(int(self.category_id))
-                return '200 OK', render_template('create_course.html', name=category.name, id=category.id) # todo create_course.html
+                return '200 OK', render_template('create_course.html', name=category.name, id=category.id)
             except KeyError:
                 return '200 OK', 'Sorry, these category are not exists...'
 
