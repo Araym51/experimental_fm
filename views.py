@@ -114,5 +114,7 @@ routes = {
     '/contact_us/': ContactView,
     '/programs/': StudyProgramsView,
     '/courses/': CoursesListView,
-    '/categories/': CategoryList
+    '/categories/': CategoryList,
+    '/create-course/': CreateCourse,
+    '/create-category/': CreateCategory,
 }

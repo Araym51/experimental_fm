@@ -8,12 +8,12 @@ class User:
 
 
 # abstract teacher
-class Teacher:
+class Teacher(User):
     pass
 
 
 # abstract student
-class Student:
+class Student(User):
     pass
 
 
@@ -61,6 +61,7 @@ class Category:
     def __init__(self, name, category):
         self.id = Category.auto_id
         Category.auto_id += 1  # при инициализации класса счетчик id будет увеличиваться
+        print(f'created category with id: {self.auto_id}')
         self.name = name
         self.category = category
         self.courses = []
@@ -103,12 +104,12 @@ class Engine:
         return Category(name, category)
 
     # поиск категорий
-    def find_category_id(self, id): # todo проверить как работает:
-        for _ in self.categories:
-            print('item', _.id)
-            if _.id == id:
-                return _
-        raise LookupError(f'Нет категории с id = {id}')  # todo посмотреть что прилетает, и сузить до Index/Key error
+    def find_category_id(self, id):
+        for category in self.categories:
+            print('item', category.id)
+            if category.id == id:
+                return category
+        raise LookupError(f'Нет категории с id = {id}')
 
     # создаем курсы
     @staticmethod
