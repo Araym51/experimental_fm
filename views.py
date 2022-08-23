@@ -6,6 +6,7 @@ from patterns.creating_patterns import Engine, Logger
 site = Engine()
 logger = Logger('main')
 
+
 # views
 class IndexView:
     def __call__(self, request):
@@ -24,7 +25,7 @@ class ContactView:
 
 class StudyProgramsView:
     def __call__(self, request):
-        return '200 OK', render_template('study_programs.html', data = date.today()) #
+        return '200 OK', render_template('study_programs.html', data=date.today())
 
 
 class CoursesListView:
@@ -32,8 +33,8 @@ class CoursesListView:
         logger.log('Course list')
         try:
             category = site.find_category_id(int(request['request_params']['id']))
-            return '200 OK', render_template('course_list.html',
-                                             objects_list = category.courses, name = category.name, id = category.id)
+            print(category.__dict__)
+            return '200 OK', render_template('course_list.html', objects_list=category.courses, name=category.name, id=category.id)
         except KeyError:
             return '200 OK', 'Sorry, these course are no longer exists...'
 
@@ -53,7 +54,7 @@ class CreateCourse:
                 course = site.create_course('record', name, category)
                 site.courses.append(course)
             return '200 OK', render_template('course_list.html', objects_list=category.courses,
-                                             name=category.name, id=category.id)
+                                    name=category.name, id=category.id)
         else:
             try:
                 self.category_id = int(request['request_params']['id'])
@@ -65,7 +66,9 @@ class CreateCourse:
 
 class CreateCategory:
     def __call__(self, request):
+
         if request['method'] == 'POST':
+            # метод пост
             print(request)
             data = request['data']
 
@@ -75,21 +78,20 @@ class CreateCategory:
             category_id = data.get('category_id')
 
             category = None
-
             if category_id:
                 category = site.find_category_id(int(category_id))
             new_category = site.create_category(name, category)
             site.categories.append(new_category)
-            return '200 OK', render_template('index.html', objects_list = site.categories)
+            return '200 OK', render_template('category_list.html', objects_list=site.categories)
         else:
             categories = site.categories
-            return '200 OK', render_template('create_category.html', categories=categories) # todo create_category.html
+            return '200 OK', render_template('create_category.html', categories=categories)
 
 
 # контроллер списка категорий
 class CategoryList:
     def __call__(self, request):
-        return '200 OK', render_template('category_list.html', objects_list = site.categories)
+        return '200 OK', render_template('category_list.html', objects_list=site.categories)
 
 
 class CopyCourse:
@@ -103,9 +105,10 @@ class CopyCourse:
                 new_course = old_course.clone()
                 new_course.name = new_name
                 site.courses.append(new_course)
-            return '200 OK', render_template('course_list.html', objects_list = site.categories)
+            return '200 OK', render_template('course_list.html', objects_list=site.courses)
         except KeyError:
             return '200 OK', 'This course are not exists'
+
 
 # пути в приложении:
 routes = {

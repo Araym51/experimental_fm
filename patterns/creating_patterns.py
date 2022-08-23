@@ -38,7 +38,7 @@ class CoursePrototype:
 
 # класс Курс
 class Course(CoursePrototype):
-    def __int__(self, name, category):
+    def __init__(self, name, category):
         self.name = name
         self.category = category
         self.category.courses.append(self)
@@ -60,8 +60,7 @@ class Category:
 
     def __init__(self, name, category):
         self.id = Category.auto_id
-        Category.auto_id += 1  # при инициализации класса счетчик id будет увеличиваться
-        print(f'created category with id: {self.auto_id}')
+        Category.auto_id += 1 # при инициализации класса счетчик id будет увеличиваться
         self.name = name
         self.category = category
         self.courses = []
@@ -109,7 +108,7 @@ class Engine:
             print('item', category.id)
             if category.id == id:
                 return category
-        raise LookupError(f'Нет категории с id = {id}')
+        raise Exception(f'Нет категории с id = {id}')
 
     # создаем курсы
     @staticmethod
@@ -117,9 +116,9 @@ class Engine:
         return CourseFactory.create(type_course, name, category)
 
     def get_course(self, name):
-        for _ in self.courses:
-            if _.name == name:
-                return _
+        for course in self.courses:
+            if course.name == name:
+                return course
         return None
 
     # статик метод для исправления бага декодирования из ASCII
