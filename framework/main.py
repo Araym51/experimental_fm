@@ -41,7 +41,7 @@ class Application:
 
         # ищем нужный контроллер
         if path in self.routes_lst:
-            view = self.routes_lst[path]()  # получаем view, потом передаем аргументы.
+            view = self.routes_lst[path]  # получаем view, потом передаем аргументы.
         else:
             view = PageNotFoundView()
 

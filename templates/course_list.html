@@ -4,13 +4,17 @@
 {% block body %}
     <div style="flex: 1 1 auto">
         <h1>Список курсов</h1>
+        <br>
+        <h1>Список курсов для категории "{{name}}"</h1>
+        {% for item in objects_list %}
+        <table>
+            <tr>
+                <td>
+                    {{item.name}} <span><a href="/copy-course/?name={{item.name}}">скопировать</a></span>
+                </td>
+            </tr>
+        </table>
+        {% endfor %}
         <a href="/create-course/?id={{id}}">Создать новый курс</a>
-        <ul>
-            {% for item in object_list %}
-            <li>
-                {{item.name}} <span>Количество курсов: {{item.course_count()}}</span>
-            </li>
-            {% endfor %}
-        </ul>
     </div>
 {% endblock %}

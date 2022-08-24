@@ -50,8 +50,9 @@ class CreateCourse:
             category = None
             if self.category_id != -1:
                 category = site.find_category_id(int(self.category_id))
-
+                print('53 category', category)
                 course = site.create_course('record', name, category)
+                print('55 course', course)
                 site.courses.append(course)
             return '200 OK', render_template('course_list.html', objects_list=category.courses,
                                     name=category.name, id=category.id)
@@ -112,12 +113,13 @@ class CopyCourse:
 
 # пути в приложении:
 routes = {
-    '/': IndexView,
-    '/about/': AboutView,
-    '/contact_us/': ContactView,
-    '/programs/': StudyProgramsView,
-    '/courses/': CoursesListView,
-    '/categories/': CategoryList,
-    '/create-course/': CreateCourse,
-    '/create-category/': CreateCategory,
+    '/': IndexView(),
+    '/about/': AboutView(),
+    '/contact_us/': ContactView(),
+    '/programs/': StudyProgramsView(),
+    '/courses/': CoursesListView(),
+    '/categories/': CategoryList(),
+    '/create-course/': CreateCourse(),
+    '/create-category/': CreateCategory(),
+    '/copy-course/': CopyCourse(),
 }

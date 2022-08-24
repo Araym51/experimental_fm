@@ -8,17 +8,15 @@
             {% for item in objects_list %}
             <tr>
                 <td>
-            {{item.name}} <span>Количество курсов: {{item.course_count()}}</span>
-			<a href="/courses/?id={{item.id}}">Показать курсы</a>
+                    {{item.name}} <span>Количество курсов: {{item.course_count()}}</span>
+			        <a href="/courses/?id={{item.id}}">Показать курсы</a>
                 </td>
             </tr>
             {% endfor %}
         </table>
         <br>
         <br>
-        <ul>
-            <li><a href="/courses/">Список курсов</a></li>
-		    <li><a href="/create-category/">Создать категорию</a></li>
-        </ul>
+		<a href="/create-category/">Создать категорию</a>
+
     </div>
 {% endblock %}
