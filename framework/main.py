@@ -5,6 +5,9 @@ from .template_render import render_template
 
 
 class PageNotFoundView:
+    """
+    класс возвращает шаблон страницы 404_not_found.html
+    """
     def __call__(self, request):
         return '404 WHAT', render_template('404_not_found.html')
 

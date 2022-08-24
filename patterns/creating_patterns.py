@@ -2,17 +2,17 @@ import copy
 import quopri
 
 
-# abstract user:
+# абстрактный пользователь:
 class User:
     pass
 
 
-# abstract teacher
+# абстрактный преподователь
 class Teacher(User):
     pass
 
 
-# abstract student
+# абстрактный студент
 class Student(User):
     pass
 
@@ -29,7 +29,7 @@ class UserFactory:
         return cls.types[type_user]()
 
 
-# порождающий паттерн прототип - курск
+# порождающий паттерн прототип - курс
 class CoursePrototype:
 
     def clone(self):
@@ -66,6 +66,7 @@ class Category:
         self.courses = []
 
     def course_count(self):
+        # считает количество созданных экземпляров класса
         result = len(self.courses)
         if self.category:
             result += self.category.course_count()
@@ -115,6 +116,7 @@ class Engine:
     def create_course(type_course, name, category):
         return CourseFactory.create(type_course, name, category)
 
+    # получение определенного курса
     def get_course(self, name):
         for course in self.courses:
             if course.name == name:
@@ -148,6 +150,7 @@ class SingletonByName(type):
             return cls.__instance[name]
 
 
+# простой логгер
 class Logger(metaclass=SingletonByName):
     def __init__(self, name):
         self.name = name
