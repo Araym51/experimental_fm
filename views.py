@@ -2,40 +2,51 @@ from datetime import date
 
 from framework.template_render import render_template
 from patterns.creating_patterns import Engine, Logger
-
+from patterns.sructure_patterns import Routes, Debug
 # получаем "движок" из порождающих паттернов
 site = Engine()
 # инициализация простого логгера
 logger = Logger('main')
 
+routes = {}
 
 # views
 # главная страница
+@Routes(routes=routes, url='/')
 class IndexView:
+    @Debug(name='Index')
     def __call__(self, request):
         return '200 OK', render_template('index.html', date=request.get('date'))
 
 
 # страница "О нас"
+@Routes(routes=routes, url='/about/')
 class AboutView:
+    @Debug(name='About')
     def __call__(self, request):
         return '200 OK', render_template('about.html')
 
 
 # страница с контактами
+@Routes(routes=routes, url='/contact_us/')
 class ContactView:
+    @Debug(name='Contacts')
     def __call__(self, request):
         return '200 OK', render_template('contact_us.html')
 
 
 # страница с расписанием
+@Routes(routes=routes, url='/programs/')
 class StudyProgramsView:
+    @Debug(name='StudyPrograms')
     def __call__(self, request):
         return '200 OK', render_template('study_programs.html', data=date.today())
 
 
 # страница с курсами
+@Routes(routes=routes, url='/courses/')
 class CoursesListView:
+    @Debug(name='CoursesList')
     def __call__(self, request):
         logger.log('Course list')
         try:
@@ -46,9 +57,11 @@ class CoursesListView:
 
 
 # страница создания курса
+@Routes(routes=routes, url='/create-course/')
 class CreateCourse:
     category_id = -1
 
+    @Debug(name='CreateCourse')
     def __call__(self, request):
         if request['method'] == 'POST':  # обработка POST запроса
             data = request['data']
@@ -71,7 +84,9 @@ class CreateCourse:
 
 
 # страница создания курса
+@Routes(routes=routes, url='/create-category/')
 class CreateCategory:
+    @Debug(name='CreateCategory')
     def __call__(self, request):
 
         if request['method'] == 'POST':
@@ -96,13 +111,17 @@ class CreateCategory:
 
 
 # контроллер списка категорий
+@Routes(routes=routes, url='/categories/')
 class CategoryList:
+    @Debug(name='CategoryList')
     def __call__(self, request):
         return '200 OK', render_template('category_list.html', objects_list=site.categories)
 
 
 # копирование курса
+@Routes(routes=routes, url='/copy-course/') # todo проверить работоспособность
 class CopyCourse:
+    @Debug(name='CopyCourse')
     def __call__(self, request):
         request_params = request['request_params']
         try:
@@ -116,17 +135,3 @@ class CopyCourse:
             return '200 OK', render_template('course_list.html', objects_list=site.courses)
         except KeyError:
             return '200 OK', render_template('404_cat_course.html')
-
-
-# пути в приложении:
-routes = {
-    '/': IndexView(),
-    '/about/': AboutView(),
-    '/contact_us/': ContactView(),
-    '/programs/': StudyProgramsView(),
-    '/courses/': CoursesListView(),
-    '/categories/': CategoryList(),
-    '/create-course/': CreateCourse(),
-    '/create-category/': CreateCategory(),
-    '/copy-course/': CopyCourse(),
-}
