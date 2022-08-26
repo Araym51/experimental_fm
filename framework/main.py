@@ -65,3 +65,24 @@ class Application:
             fixed_value_str = quopri.decodestring(fixed_value).decode('UTF-8')
             fixed_data[key] = fixed_value_str
         return fixed_data
+
+
+class Debug(Application):
+    def __init__(self, routes_lst, front_list):
+        self.app = Application(routes_lst, front_list)
+        super().__init__(routes_lst, front_list)
+
+    def __call__(self, environ, start_response):
+        print('DEBUG')
+        print(environ)
+        return self.app(environ, start_response)
+
+
+class FakeApp(Application):
+    def __init__(self, routes_lst, front_list):
+        self.app = Application(routes_lst, front_list)
+        super().__init__(routes_lst, front_list)
+
+    def __call__(self, environ, start_response):
+        start_response('200 OK', [('Content-Type', 'text/html')])
+        return ['Hello from Fake']
