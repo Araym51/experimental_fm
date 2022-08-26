@@ -106,7 +106,6 @@ class Engine:
     # поиск категорий
     def find_category_id(self, id):
         for category in self.categories:
-            print('item', category.id)
             if category.id == id:
                 return category
         raise Exception(f'Нет категории с id = {id}')
