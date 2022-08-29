@@ -3,36 +3,35 @@ from datetime import date
 from framework.template_render import render_template
 from patterns.creating_patterns import Engine, Logger
 from patterns.sructure_patterns import Routes, Debug
+from patterns.behavior_patterns import TemplateView, CreateView, \
+    BaseSerializer, ListView, EmailNotify, SmsNotify
+
+
 # получаем "движок" из порождающих паттернов
 site = Engine()
 # инициализация простого логгера
 logger = Logger('main')
 
+# пути приложения. С помощью декоратора @Routes все пути будут складываться сюда
 routes = {}
 
 # views
 # главная страница
 @Routes(routes=routes, url='/')
-class IndexView:
-    @Debug(name='Index')
-    def __call__(self, request):
-        return '200 OK', render_template('index.html', date=request.get('date'))
+class IndexView(ListView):
+    template_name = 'index.html'
 
 
 # страница "О нас"
 @Routes(routes=routes, url='/about/')
-class AboutView:
-    @Debug(name='About')
-    def __call__(self, request):
-        return '200 OK', render_template('about.html')
+class AboutView(ListView):
+    template_name = 'about.html'
 
 
 # страница с контактами
 @Routes(routes=routes, url='/contact_us/')
-class ContactView:
-    @Debug(name='Contacts')
-    def __call__(self, request):
-        return '200 OK', render_template('contact_us.html')
+class ContactView(ListView):
+    template_name = 'contact_us.html'
 
 
 # страница с расписанием
@@ -40,7 +39,7 @@ class ContactView:
 class StudyProgramsView:
     @Debug(name='StudyPrograms')
     def __call__(self, request):
-        return '200 OK', render_template('study_programs.html', data=date.today())
+        return '200 OK', render_template('study_programs.html', objects_list=date.today())
 
 
 # страница с курсами

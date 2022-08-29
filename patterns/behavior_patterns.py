@@ -2,11 +2,13 @@ import jsonpickle
 from framework.template_render import render_template
 
 
+# базовый класс наблюдатель
 class Observer:
     def update(self, subject):
         pass
 
 
+# класс - объект наблюдения
 class Subject:
     def __init__(self):
         self.observers = []
@@ -16,16 +18,19 @@ class Subject:
             observer.update(self)
 
 
+# дочерний класс наблюдателя, служит для оповещения по СМС при добалении нового пользователя
 class SmsNotify(Observer):
     def update(self, subject):
         print('Sending SMS =->', f'{subject.students[-1].name} присоедился к нам')
 
 
+# дочерний класс наблюдателя, служит для оповещения по email при добалении нового пользователя
 class EmailNotify(Observer):
     def update(self, subject):
         print('Sending EMAIL =->', f'{subject.students[-1].name} присоедился к нам')
 
 
+# базовый сериализатор для API
 class BaseSerializer:
     def __init__(self, object):
         self.object = object
@@ -38,16 +43,21 @@ class BaseSerializer:
         return jsonpickle.loads(data)
 
 
+
 class TemplateView:
+    # шаблон отображаемой страницы:
     template_name = 'template.html'
 
     def get_context_data(self):
+        """необходимо переопределить если есть контекстная информация"""
         return {}
 
     def get_template(self):
+        """возвращает назначенный шаблон"""
         return self.template_name
 
     def render_template_with_context(self):
+        """рендер шаблона с контекстной информацией"""
         template_name = self.get_template()
         context = self.get_context_data()
         return '200 OK', render_template(template_name, **context)
@@ -57,18 +67,24 @@ class TemplateView:
 
 
 class ListView(TemplateView):
+    # здесь хранятся данные из нашего движка (creating_patterns.Engine)
     query_set = []
+    # шаблон страницы
     template_name = 'template.html'
     context_object_name = 'objects_list'
 
     def get_queryset(self):
+        """данные получаемые из creating_patterns.Engine.
+        Необходимо переопределить и явно указать какие данные используем"""
         print(self.query_set)
         return self.query_set
 
     def get_context_object_name(self):
+        """ключ словаря по которому будем искать query_set"""
         return self.context_object_name
 
     def get_context_data(self):
+        """возвращает словарь имя_контекста: набор данных"""
         query_set = self.get_queryset()
         context_object_name = self.get_context_object_name()
         context = {context_object_name: query_set}
@@ -83,6 +99,7 @@ class CreateView(TemplateView):
         return request['data']
 
     def create_obj(self, data):
+        """метод для создания объектов. Необходимо переопределить в view"""
         pass
 
     def __call__(self, request):

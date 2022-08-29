@@ -18,11 +18,15 @@ class Routes:
 
 class Debug: # todo ДОКУМЕНТАЦИЯ!
     def __init__(self, name):
+        """
+        :param name: имя декорируемой функции
+        """
         self.name = name
 
     def __call__(self, cls):
         def timeit(method):
             def timed(*args, **kwargs):
+                """Метод замеряет начало срабатывания и конец. В итоге вычисляет разницу"""
                 begin = time()
                 res = method(*args, **kwargs)
                 end = time()
