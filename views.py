@@ -15,6 +15,7 @@ logger = Logger('main')
 # пути приложения. С помощью декоратора @Routes все пути будут складываться сюда
 routes = {}
 
+
 # views
 # главная страница
 @Routes(routes=routes, url='/')
@@ -88,6 +89,7 @@ class CreateCourse:
 @Routes(routes=routes, url='/categories/')
 class CategoryList(ListView):
     template_name = 'category_list.html'
+
     def get_context_data(self):
         return {'objects_list': site.categories}
     # @Debug(name='CategoryList')
