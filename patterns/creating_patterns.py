@@ -1,6 +1,6 @@
 import copy
 import quopri
-from behavior_patterns import Subject, ConsoleWriter
+from .behavior_patterns import Subject, ConsoleWriter
 
 
 # абстрактный пользователь:
@@ -16,9 +16,10 @@ class Teacher(User):
 
 # абстрактный студент
 class Student(User):
+
     def __init__(self, name):
         self.courses = []
-        super.__init__(name)
+        super().__init__(name)
 
 
 # фабрика пользователей

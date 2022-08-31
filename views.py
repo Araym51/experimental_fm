@@ -142,14 +142,14 @@ class CopyCourse:
 
 
 @Routes(routes=routes, url='/students-list/')
-class StudentsListView(ListView):  # todo 'students_list.html'
+class StudentsListView(ListView):
     query_set = site.students
     template_name = 'students_list.html'
 
 
-@Routes(routes=routes, url='/add-student/')
-class StudentCreateView(CreateView):  # todo 'create_student'
-    template_name = 'create_student'
+@Routes(routes=routes, url='/create-student/')
+class StudentCreateView(CreateView):
+    template_name = 'create_student.html'
 
     def create_obj(self, data: dict):
         name = data['name']
@@ -159,7 +159,7 @@ class StudentCreateView(CreateView):  # todo 'create_student'
 
 
 @Routes(routes=routes, url='/add-student/')
-class AddStudentByCourseCreateView(CreateView):  # todo 'add_student.html'
+class AddStudentByCourseCreateView(CreateView):
     template_name = 'add_student.html'
 
     def get_context_data(self):
