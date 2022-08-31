@@ -47,6 +47,7 @@ class BaseSerializer:
 class TemplateView:
     # шаблон отображаемой страницы:
     template_name = 'template.html'
+    error_template = 'template.html'
 
     def get_context_data(self):
         """необходимо переопределить если есть контекстная информация"""
@@ -62,8 +63,14 @@ class TemplateView:
         context = self.get_context_data()
         return '200 OK', render_template(template_name, **context)
 
+    def error_render(self, error_template):
+        return '200 OK', render_template(self.template_name)
+
     def __call__(self, request):
-        return self.render_template_with_context()
+        try:
+            return self.render_template_with_context()
+        except KeyError:
+            return self.error_render(self.error_template)
 
 
 class ListView(TemplateView):

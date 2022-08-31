@@ -1,10 +1,12 @@
 import copy
 import quopri
+from behavior_patterns import Subject, ConsoleWriter
 
 
 # абстрактный пользователь:
 class User:
-    pass
+    def __init__(self, name):
+        self.name = name
 
 
 # абстрактный преподователь
@@ -14,7 +16,9 @@ class Teacher(User):
 
 # абстрактный студент
 class Student(User):
-    pass
+    def __init__(self, name):
+        self.courses = []
+        super.__init__(name)
 
 
 # фабрика пользователей
@@ -25,8 +29,8 @@ class UserFactory:
     }
 
     @classmethod
-    def create(cls, type_user):
-        return cls.types[type_user]()
+    def create(cls, type_user, name):
+        return cls.types[type_user](name)
 
 
 # порождающий паттерн прототип - курс
@@ -37,11 +41,21 @@ class CoursePrototype:
 
 
 # класс Курс
-class Course(CoursePrototype):
+class Course(CoursePrototype, Subject):
     def __init__(self, name, category):
         self.name = name
         self.category = category
         self.category.courses.append(self)
+        self.students = []
+        super().__init__()
+
+    def __getitem__(self, item):
+        return self.students[item]
+
+    def add_student(self, student: Student):
+        self.students.append(student)
+        student.courses.append(self)
+        self.notify()
 
 
 # интерактивный курс
@@ -95,8 +109,8 @@ class Engine:
 
     # создаем пользователя
     @staticmethod
-    def create_user(type_user):
-        return UserFactory.create(type_user)
+    def create_user(type_user, name):
+        return UserFactory.create(type_user, name)
 
     # создаем категории
     @staticmethod
@@ -121,6 +135,11 @@ class Engine:
             if course.name == name:
                 return course
         return None
+
+    def get_student(self, name) -> Student:
+        for student in self.students:
+            if student.name == name:
+                return student
 
     # статик метод для исправления бага декодирования из ASCII
     @staticmethod
@@ -151,9 +170,11 @@ class SingletonByName(type):
 
 # простой логгер
 class Logger(metaclass=SingletonByName):
-    def __init__(self, name):
+    def __init__(self, name, writer=ConsoleWriter()):
         self.name = name
+        self.writer = writer
 
-    @staticmethod
-    def log(text):
+    def log(self, text):
         print('log =->', text)
+        text = f'log =-> {text}'
+        self.writer.write(text)
