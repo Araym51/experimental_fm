@@ -4,8 +4,6 @@ import sqlite3
 
 from .behavior_patterns import Subject, ConsoleWriter
 from .architectural_system_pattern import DomainObject
-from .architectural_pattern_mappers import DbCommitException, DbUpdateException, \
-    DbDeleteExeption, RecordNotFoundException
 
 
 # абстрактный пользователь:
@@ -31,7 +29,7 @@ class Student(User, DomainObject):
 class UserFactory:
     types = {
         'student': Student,
-        'teacher': Teacher,
+        'teacher': Teacher
     }
 
     @classmethod
@@ -210,31 +208,31 @@ class StudentMapper:
         if result:
             return Student(*result)
         else:
-            raise RecordNotFoundException(f'Record with id={id} not found')
+            raise RecordNotFoundException(f'record with id={id} not found')
 
-    def insert(self, object):
+    def insert(self, obj):
         statement = f"INSERT INTO {self.tablename} (name) VALUES (?)"
-        self.cursor.execute(statement, (object.name,))
+        self.cursor.execute(statement, (obj.name,))
         try:
             self.connection.commit()
         except Exception as error:
             raise DbCommitException(error.args)
 
-    def update(self, object):
+    def update(self, obj):
         statement = f"UPDATE {self.tablename} SET name=? WHERE id=?"
-        self.cursor.execute(statement, (object.name, object.id))
+        self.cursor.execute(statement, (obj.name, obj.id))
         try:
             self.connection.commit()
         except Exception as error:
             raise DbUpdateException(error.args)
 
-    def delete(self, object):
-        statement = f"UPDATE {self.tablename} SET name=? WHERE id=?"
-        self.cursor.execute(statement, (object.id,))
+    def delete(self, obj):
+        statement = f"DELETE FROM {self.tablename} WHERE id=?"
+        self.cursor.execute(statement, (obj.id,))
         try:
             self.connection.commit()
         except Exception as error:
-            raise DbDeleteExeption(error.args)
+            raise DbDeleteException(error.args)
 
 
 connection = sqlite3.connect('patterns.sqlite')
@@ -242,14 +240,33 @@ connection = sqlite3.connect('patterns.sqlite')
 
 class MapperRegistry:
     mappers = {
-        'student': StudentMapper
+        'student': StudentMapper,
     }
 
     @staticmethod
-    def get_mapper(object):
-        if isinstance(object, Subject):
+    def get_mapper(obj):
+        if isinstance(obj, Student):
             return StudentMapper(connection)
 
     @staticmethod
     def get_current_mapper(name):
         return MapperRegistry.mappers[name](connection)
+
+
+class DbCommitException(Exception):
+    def __init__(self, message):
+        super().__init__(f'Db commit error: {message}')
+
+
+class DbUpdateException(Exception):
+    def __init__(self, message):
+        super().__init__(f'Db update error: {message}')
+
+
+class DbDeleteException(Exception):
+    def __init__(self, message):
+        super().__init__(f'Db delete error: {message}')
+
+class RecordNotFoundException(Exception):
+    def __init__(self, message):
+        super().__init__(f'Record not found: {message}')

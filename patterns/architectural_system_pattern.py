@@ -12,25 +12,29 @@ class UnitOfWork:
     def set_mapper_registry(self, MapperRegistry):
         self.MapperRegistry = MapperRegistry
 
-    def registry_new(self, object):
-        self.new_objects.append(object)
+    def register_new(self, obj):
+        self.new_objects.append(obj)
 
     def register_dirty(self, object):
         self.dirty_objects.append(object)
 
-    def register_removed(self, object):
-        self.removed_objects.append(object)
+    def register_removed(self, obj):
+        self.removed_objects.append(obj)
 
     def commit(self):
         self.insert_new()
         self.update_dirty()
         self.delete_removed()
 
+        self.new_objects.clear()
+        self.dirty_objects.clear()
+        self.removed_objects.clear()
+
     def insert_new(self):
         print(self.new_objects)
-        for item in self.new_objects:
-            print(f'MapperRegistry: {self.MapperRegistry}')
-            self.MapperRegistry.get_mapper(item).inser(object)
+        for obj in self.new_objects:
+            print(f"MapperRegistry: {self.MapperRegistry}")
+            self.MapperRegistry.get_mapper(obj).insert(obj)
 
     def delete_removed(self):
         for item in self.removed_objects:

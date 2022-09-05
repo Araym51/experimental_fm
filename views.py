@@ -1,17 +1,23 @@
 from datetime import date
 
 from framework.template_render import render_template
-from patterns.creating_patterns import Engine, Logger
+from patterns.creating_patterns import Engine, Logger, MapperRegistry
 from patterns.sructure_patterns import Routes, Debug
 from patterns.behavior_patterns import TemplateView, CreateView, \
     BaseSerializer, ListView, EmailNotify, SmsNotify
+from patterns.architectural_system_pattern import UnitOfWork
 
 
 # получаем "движок" из порождающих паттернов
 site = Engine()
 # инициализация простого логгера
 logger = Logger('main')
-
+# оповещения:
+email_notifier = EmailNotify()
+sms_notify = SmsNotify()
+# База данных:
+UnitOfWork.new_current()
+UnitOfWork.get_current().set_mapper_registry(MapperRegistry)
 # пути приложения. С помощью декоратора @Routes все пути будут складываться сюда
 routes = {}
 
@@ -145,8 +151,11 @@ class CopyCourse:
 
 @Routes(routes=routes, url='/students-list/')
 class StudentsListView(ListView):
-    query_set = site.students
     template_name = 'students_list.html'
+
+    def get_queryset(self):
+        mapper = MapperRegistry.get_current_mapper('student')
+        return mapper.all()
 
 
 @Routes(routes=routes, url='/create-student/')
@@ -158,6 +167,8 @@ class StudentCreateView(CreateView):
         name = site.decode_value(name)
         new_object = site.create_user('student', name)
         site.students.append(new_object)
+        new_object.mark_new()
+        UnitOfWork.get_current().commit()
 
 
 @Routes(routes=routes, url='/add-student/')
