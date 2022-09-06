@@ -4,6 +4,7 @@ import sqlite3
 
 from .behavior_patterns import Subject, ConsoleWriter
 from .architectural_system_pattern import DomainObject
+from .mappers_exceptions import RecordNotFoundException, DbUpdateException, DbCommitException, DbDeleteException
 
 
 # абстрактный пользователь:
@@ -251,22 +252,3 @@ class MapperRegistry:
     @staticmethod
     def get_current_mapper(name):
         return MapperRegistry.mappers[name](connection)
-
-
-class DbCommitException(Exception):
-    def __init__(self, message):
-        super().__init__(f'Db commit error: {message}')
-
-
-class DbUpdateException(Exception):
-    def __init__(self, message):
-        super().__init__(f'Db update error: {message}')
-
-
-class DbDeleteException(Exception):
-    def __init__(self, message):
-        super().__init__(f'Db delete error: {message}')
-
-class RecordNotFoundException(Exception):
-    def __init__(self, message):
-        super().__init__(f'Record not found: {message}')
