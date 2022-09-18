@@ -1,0 +1,13 @@
+необходимо установить следующие пакеты в систему:
+sudo apt install python3-pip
+sudo apt install gunicorn
+apt install uwsgi
+sudo apt --fix-broken install
+
+
+установить в venv:
+pip install gunicorn
+pip install uwsgi
+pip install jinja2
+
+Запускать приложение через launch_app.py
