@@ -1,11 +1,15 @@
 import quopri
 from wsgiref.util import setup_testing_defaults
 from .requests_separator import PostRequest, GetRequest
+from .template_render import render_template
 
 
 class PageNotFoundView:
+    """
+    класс возвращает шаблон страницы 404_not_found.html
+    """
     def __call__(self, request):
-        return '404 WHAT', '404 PAGE Not Found'
+        return '404 WHAT', render_template('404_not_found.html')
 
 
 class Application:
@@ -40,7 +44,7 @@ class Application:
 
         # ищем нужный контроллер
         if path in self.routes_lst:
-            view = self.routes_lst[path]()  # получаем view, потом передаем аргументы.
+            view = self.routes_lst[path]  # получаем view, потом передаем аргументы.
         else:
             view = PageNotFoundView()
 

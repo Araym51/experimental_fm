@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %} Список категорий {% endblock %}
+
+{% block body %}
+<div style="flex: 1 1 auto">
+    <h1>Список категорий</h1>
+    <table>
+        {% for item in objects_list %}
+        <tr>
+            <td>
+                {{item.name}} <span>Количество курсов: {{item.course_count()}}</span>
+                <a href="/courses/?id={{item.id}}">Показать курсы</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <br>
+    <a href="/create-category/">Создать категорию</a>
+
+</div>
+{% endblock %}
