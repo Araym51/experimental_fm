@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %} Создать студента {% endblock %}
+
+{% block body %}
+<div style="flex: 1 1 auto">
+    <br>
+    <br>
+    <h3>Создание студента</h3>
+    <br>
+    <br>
+    <h1>Создание студента</h1>
+    <form method="post">
+        <input type="text" name="name" placeholder="Имя">
+        <button type="submit">Сохранить</button>
+    </form>
+    <br>
+    <br>
+    <a href="/students-list/">Список студентов</a>
+    <br>
+    <a href="/add-student/">Добавить студента на курс</a>
+</div>
+{% endblock %}

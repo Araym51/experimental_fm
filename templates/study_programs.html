@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %} Школа программирования {% endblock %}
+
+{% block body %}
+<div style="flex: 1 1 auto">
+    <h1>Наши курсы</h1>
+    <p>На все курсы можно записаться в течении года</p>
+    <p>Расписание на {{objects_list}}</p>
+    <table>
+        <tr>
+            <th>Дисциплина</th>
+            <th>Город 1</th>
+            <th>Город 2</th>
+            <th>Город 3</th>
+        </tr>
+        <tr>
+            <td>Основы</td>
+            <td>{{objects_list}} <br> 11:00 - 14:00</td>
+            <td>{{objects_list}} <br> 11:00 - 14:00</td>
+            <td>{{objects_list}} <br> 11:00 - 14:00</td>
+        </tr>
+        <tr>
+            <td>Aлгоритмы</td>
+            <td>{{objects_list}} <br> 11:00 - 14:00</td>
+            <td>{{objects_list}} <br> 11:00 - 14:00</td>
+            <td>{{objects_list}} <br> 11:00 - 14:00</td>
+        </tr>
+        <tr>
+            <td>Основы Фреймворков</td>
+            <td>{{objects_list}} <br> 11:00 - 14:00</td>
+            <td>{{objects_list}} <br> 11:00 - 14:00</td>
+            <td>{{objects_list}} <br> 11:00 - 14:00</td>
+        </tr>
+    </table>
+</div>
+{% endblock %}
