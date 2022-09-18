@@ -3,44 +3,45 @@ from datetime import date
 from framework.template_render import render_template
 from patterns.creating_patterns import Engine, Logger
 from patterns.sructure_patterns import Routes, Debug
+from patterns.behavior_patterns import TemplateView, CreateView, \
+    BaseSerializer, ListView, EmailNotify, SmsNotify
+
+
 # получаем "движок" из порождающих паттернов
 site = Engine()
 # инициализация простого логгера
 logger = Logger('main')
 
+# пути приложения. С помощью декоратора @Routes все пути будут складываться сюда
 routes = {}
+
 
 # views
 # главная страница
 @Routes(routes=routes, url='/')
-class IndexView:
-    @Debug(name='Index')
-    def __call__(self, request):
-        return '200 OK', render_template('index.html', date=request.get('date'))
+class IndexView(ListView):
+    template_name = 'index.html'
 
 
 # страница "О нас"
 @Routes(routes=routes, url='/about/')
-class AboutView:
-    @Debug(name='About')
-    def __call__(self, request):
-        return '200 OK', render_template('about.html')
+class AboutView(ListView):
+    template_name = 'about.html'
 
 
 # страница с контактами
 @Routes(routes=routes, url='/contact_us/')
-class ContactView:
-    @Debug(name='Contacts')
-    def __call__(self, request):
-        return '200 OK', render_template('contact_us.html')
+class ContactView(ListView):
+    template_name = 'contact_us.html'
 
 
 # страница с расписанием
 @Routes(routes=routes, url='/programs/')
-class StudyProgramsView:
-    @Debug(name='StudyPrograms')
-    def __call__(self, request):
-        return '200 OK', render_template('study_programs.html', data=date.today())
+class StudyProgramsView(TemplateView):
+    template_name = 'study_programs.html'
+
+    def get_context_data(self):
+        return {'objects_list': date.today()}
 
 
 # страница с курсами
@@ -51,7 +52,8 @@ class CoursesListView:
         logger.log('Course list')
         try:
             category = site.find_category_id(int(request['request_params']['id']))
-            return '200 OK', render_template('course_list.html', objects_list=category.courses, name=category.name, id=category.id)
+            return '200 OK', render_template('course_list.html', objects_list=category.courses,
+                                                              name=category.name, id=category.id)
         except KeyError:
             return '200 OK', render_template('404_cat_course.html')
 
@@ -83,6 +85,18 @@ class CreateCourse:
                 return '200 OK', render_template('404_cat_course.html')
 
 
+# контроллер списка категорий
+@Routes(routes=routes, url='/categories/')
+class CategoryList(ListView):
+    template_name = 'category_list.html'
+
+    def get_context_data(self):
+        return {'objects_list': site.categories}
+    # @Debug(name='CategoryList')
+    # def __call__(self, request):
+    #     return '200 OK', render_template('category_list.html', objects_list=site.categories)
+
+
 # страница создания курса
 @Routes(routes=routes, url='/create-category/')
 class CreateCategory:
@@ -110,14 +124,6 @@ class CreateCategory:
             return '200 OK', render_template('create_category.html', categories=categories)
 
 
-# контроллер списка категорий
-@Routes(routes=routes, url='/categories/')
-class CategoryList:
-    @Debug(name='CategoryList')
-    def __call__(self, request):
-        return '200 OK', render_template('category_list.html', objects_list=site.categories)
-
-
 # копирование курса
 @Routes(routes=routes, url='/copy-course/') # todo проверить работоспособность
 class CopyCourse:
@@ -135,3 +141,47 @@ class CopyCourse:
             return '200 OK', render_template('course_list.html', objects_list=site.courses)
         except KeyError:
             return '200 OK', render_template('404_cat_course.html')
+
+
+@Routes(routes=routes, url='/students-list/')
+class StudentsListView(ListView):
+    query_set = site.students
+    template_name = 'students_list.html'
+
+
+@Routes(routes=routes, url='/create-student/')
+class StudentCreateView(CreateView):
+    template_name = 'create_student.html'
+
+    def create_obj(self, data: dict):
+        name = data['name']
+        name = site.decode_value(name)
+        new_object = site.create_user('student', name)
+        site.students.append(new_object)
+
+
+@Routes(routes=routes, url='/add-student/')
+class AddStudentByCourseCreateView(CreateView):
+    template_name = 'add_student.html'
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['courses'] = site.courses
+        context['students'] = site.students
+        return context
+
+    def create_obj(self, data: dict):
+        course_name = data['course_name']
+        course_name = site.decode_value(course_name)
+        course = site.get_course(course_name)
+        student_name = data['student_name']
+        student_name = site.decode_value(student_name)
+        student = site.get_student(student_name)
+        course.add_student(student)
+
+
+@Routes(routes=routes, url='/api/')
+class CourseApi:
+    @Debug(name='Api')
+    def __call__(self, request):
+        return '200 OK', BaseSerializer(site.courses).save()
